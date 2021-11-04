@@ -10,6 +10,7 @@ sourceCompatibility = '11'
 ext {
     modelMapperVersion = "2.4.4"
     caffeineVersion = "3.0.4"
+    jsonrpcClientVersion = "1.16.5"
 }
 
 configurations {
@@ -31,6 +32,7 @@ dependencies {
 
     implementation("org.modelmapper:modelmapper:${modelMapperVersion}")
     implementation("com.github.ben-manes.caffeine:caffeine:${caffeineVersion}")
+    implementation("com.thetransactioncompany:jsonrpc2-client:${jsonrpcClientVersion}")
 
 
     compileOnly("org.projectlombok:lombok")

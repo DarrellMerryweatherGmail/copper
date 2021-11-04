@@ -19,3 +19,10 @@ spring:
     caffeine:
       spec: maximumSize=500,expireAfterAccess=600s
 logging.level.com.copper.coppertest: DEBUG
+
+deribit:
+  api-base-uri: https://test.deribit.com/api/v2
+  oauth:
+    auth-path: public/auth
+    client-id: FO7pZ6s6
+    client-secret: dVVFUjZN4kuXVW1b1Pd_pIBoe5pgMoBpmAWNph8FMKs
