@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * The wrapper of the "data" object that is returned when requesting the deposits from Deribit
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

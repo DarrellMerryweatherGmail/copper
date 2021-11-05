@@ -4,7 +4,7 @@ import com.copper.coppertest.deribit.oauth.OAuthConnectionConfigurer;
 import com.copper.coppertest.deribit.oauth.model.OAuthToken;
 import com.copper.coppertest.deribit.service.DeribitAccountService;
 import com.copper.coppertest.deribit.service.DeribitErrorMessages;
-import com.copper.coppertest.deribit.service.OAuthorisationService;
+import com.copper.coppertest.deribit.service.OAuthService;
 import com.copper.coppertest.deribit.account.model.AccountDto;
 import com.copper.coppertest.service.AccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,11 +22,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Concrete implementation of the {@link DeribitAccountService}
+ */
 @Slf4j
 @Service
 public class DefaultDeribitAccountService implements DeribitAccountService
 {
-    private final OAuthorisationService oAuthorisationService;
+    private final OAuthService oAuthorisationService;
     private final String apiBaseUri;
     private final String subaccountsPath;
     private final ObjectMapper objectMapper;
@@ -35,7 +38,7 @@ public class DefaultDeribitAccountService implements DeribitAccountService
     public DefaultDeribitAccountService(
             @Value("${deribit.api-base-uri}") final String apiBaseUri,
             @Value("${deribit.accounts.subaccounts-path}") final String subaccountsPath,
-            final OAuthorisationService oAuthorisationService,
+            final OAuthService oAuthorisationService,
             final ObjectMapper objectMapper,
             final AccountService accountService)
     {
@@ -73,10 +76,19 @@ public class DefaultDeribitAccountService implements DeribitAccountService
             e.printStackTrace();
         }
     }
+
+    /**
+     * Save all of the {@link AccountDto}'s to the persistence (DB in this case)
+     * @param accounts the array of {@link AccountDto}'s to save
+     */
     private void saveAccounts(final AccountDto[] accounts)
     {
         Arrays.stream(accounts).forEach(accountService::saveAccount);
     }
+
+    /**
+     * A enum that is used to contain all of the possible parameters that are used for the Account API's
+     */
     enum AccountParameters
     {
         WITH_PORTFOLIO("with_portfolio");

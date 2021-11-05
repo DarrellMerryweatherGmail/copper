@@ -4,7 +4,7 @@ import com.copper.coppertest.deribit.oauth.OAuthConnectionConfigurer;
 import com.copper.coppertest.deribit.oauth.model.OAuthToken;
 import com.copper.coppertest.deribit.service.DeribitErrorMessages;
 import com.copper.coppertest.deribit.service.DeribitWalletService;
-import com.copper.coppertest.deribit.service.OAuthorisationService;
+import com.copper.coppertest.deribit.service.OAuthService;
 import com.copper.coppertest.deribit.wallet.model.DepositDto;
 import com.copper.coppertest.deribit.wallet.model.DepositResponse;
 import com.copper.coppertest.deribit.wallet.model.TransferRequest;
@@ -27,11 +27,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Concrete implementation of the {@link DeribitWalletService}
+ */
 @Slf4j
 @Service
 public class DefaultDeribitWalletService implements DeribitWalletService
 {
-    private final OAuthorisationService oAuthorisationService;
+    private final OAuthService oAuthService;
     private final ObjectMapper objectMapper;
     private final String apiBaseUri;
     private final String depositsPath;
@@ -44,10 +47,10 @@ public class DefaultDeribitWalletService implements DeribitWalletService
             @Value("${deribit.wallet.deposits-path}") final String depositsPath,
             @Value("${deribit.wallet.withdrawals-path}") final String withdrawalsPath,
             @Value("${deribit.wallet.submit-transfer-to-subaccount-path}") final String submitTransferToSubaccountPath,
-            final OAuthorisationService oAuthorisationService,
+            final OAuthService oAuthService,
             final ObjectMapper objectMapper)
     {
-        this.oAuthorisationService = oAuthorisationService;
+        this.oAuthService = oAuthService;
         this.apiBaseUri = apiBaseUri;
         this.depositsPath = depositsPath;
         this.withdrawalsPath = withdrawalsPath;
@@ -124,6 +127,16 @@ public class DefaultDeribitWalletService implements DeribitWalletService
         }
         return null;
     }
+
+    /**
+     * Send the JSON-RPC request to Deribit
+     * @param path the specific JSON-RPC path to be used
+     * @param parameters the parameters that are passed as part of the request
+     * @param requestId the id of the request
+     * @return the {@link JSONRPC2Response} returned from making the request
+     * @throws MalformedURLException an exception in case the apiBaseUri is incorrectly formed
+     * @throws JSONRPC2SessionException any exception that is raised when making the request to Deribit
+     */
     private JSONRPC2Response sendRequestToDeribit(final String path, final Map<String, Object> parameters, final int requestId)
             throws MalformedURLException, JSONRPC2SessionException {
         JSONRPC2Session session = new JSONRPC2Session(new URL(apiBaseUri));
@@ -133,11 +146,19 @@ public class DefaultDeribitWalletService implements DeribitWalletService
         JSONRPC2Request request = new JSONRPC2Request(path, parameters, requestId);
         return session.send(request);
     }
+
+    /**
+     * Get a valid {@link OAuthToken} from the {@link OAuthService}
+     * @return a valid {@link OAuthToken}
+     */
     private OAuthToken getOAuthToken()
     {
-        return oAuthorisationService.getAccessToken();
+        return oAuthService.getAccessToken();
     }
 
+    /**
+     * A list of possible parameters that can be used in the wallet API's
+     */
     enum WalletParameters
     {
         CURRENCY("currency"),

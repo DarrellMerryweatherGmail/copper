@@ -6,6 +6,9 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
+/**
+ * A DTO that represents the response from the transfer to sub-account request
+ */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransferToSubaccountDto

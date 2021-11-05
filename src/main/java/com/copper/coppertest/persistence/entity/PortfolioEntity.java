@@ -9,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 
+/**
+ * The JPA entity that is used for storing the portfolio information in the DB
+ */
 @Entity
 @Table(name = PortfolioEntityDefinition.TABLE_NAME)
 public class PortfolioEntity {

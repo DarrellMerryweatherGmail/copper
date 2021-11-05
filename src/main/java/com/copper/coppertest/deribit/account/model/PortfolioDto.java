@@ -6,6 +6,9 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
+/**
+ * A DTO representing each of the currency portfolio's associated with an {@link AccountDto}
+ */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PortfolioDto

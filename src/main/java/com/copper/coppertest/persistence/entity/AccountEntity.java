@@ -9,6 +9,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Set;
 
+/**
+ * The JPA entity that is used for storing the account information in the DB
+ */
 @Entity
 @Table(name = AccountEntityDefinition.TABLE_NAME)
 public class AccountEntity {

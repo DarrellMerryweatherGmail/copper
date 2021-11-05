@@ -1,6 +1,9 @@
 package com.copper.coppertest.persistence.entity;
 
 
+/**
+ * A set of constants that holds the necessary information that relate to the {@link PortfolioEntity}
+ */
 public final class PortfolioEntityDefinition
 {
     public static final String TABLE_NAME = "portfolio";

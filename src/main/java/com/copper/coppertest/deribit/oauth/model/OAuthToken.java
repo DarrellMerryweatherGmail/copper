@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+/**
+ * A simple POJO used to represent the OAuth token returned from the /public/oauth endpoint of Deribit
+ */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OAuthToken

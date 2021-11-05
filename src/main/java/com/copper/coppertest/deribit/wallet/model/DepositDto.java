@@ -6,6 +6,9 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
+/**
+ * A DTO that represents the response when requesting the deposit's from Deribit
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class DepositDto

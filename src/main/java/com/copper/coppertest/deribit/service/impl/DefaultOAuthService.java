@@ -2,7 +2,7 @@ package com.copper.coppertest.deribit.service.impl;
 
 import com.copper.coppertest.deribit.oauth.model.OAuthToken;
 import com.copper.coppertest.deribit.service.DeribitErrorMessages;
-import com.copper.coppertest.deribit.service.OAuthorisationService;
+import com.copper.coppertest.deribit.service.OAuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Response;
@@ -17,9 +17,12 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Concrete implementation of {@link OAuthService}
+ */
 @Slf4j
 @Service
-public class DefaultOAuthorisationService implements OAuthorisationService
+public class DefaultOAuthService implements OAuthService
 {
     private final String apiBaseUri;
     private final String authPath;
@@ -27,7 +30,7 @@ public class DefaultOAuthorisationService implements OAuthorisationService
     private final String clientId;
     private final String clientSecret;
 
-    public DefaultOAuthorisationService(
+    public DefaultOAuthService(
             @Value("${deribit.api-base-uri}") final String apiBaseUri,
             @Value("${deribit.oauth.auth-path}") final String authPath,
             @Value("${deribit.oauth.client-id}") final String clientId,
@@ -67,6 +70,9 @@ public class DefaultOAuthorisationService implements OAuthorisationService
         return oauthToken;
     }
 
+    /**
+     * A set of possible parameters that can be used for any OAuth interaction
+     */
     enum OAuthParameter
     {
         GRANT_TYPE("grant_type"),
@@ -80,16 +86,19 @@ public class DefaultOAuthorisationService implements OAuthorisationService
         }
         public String getParameterName() { return this.parameterName; }
     }
+
+    /**
+     * The different OAuth grant types that can be used
+     */
     enum GrantType
     {
         CLIENT_CREDENTIALS("client_credentials");
 
-        private String grantType;
+        private final String grantType;
         GrantType(final String grantType)
         {
             this.grantType = grantType;
         }
-
         public String getGrantType() { return this.grantType; }
     }
 }

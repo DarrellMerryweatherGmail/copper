@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.Map;
 
+/**
+ * DTO that represents the Account information that is retrieved from Deribit
+ */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountDto

@@ -18,14 +18,22 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Main spring boot application configuration
+ */
 @Configuration
 public class ApplicationConfiguration
 {
+    /**
+     * A {@link ModelMapper} bean that is used to convert one object to another
+     * @return a {@link ModelMapper}
+     */
     @Bean
     public ModelMapper getModelMapper()
     {
         final ModelMapper modelMapper = new ModelMapper();
 
+        // Create a custom converter to convert between the AccountDto and the AccountEntity
         final Converter<AccountDto, AccountEntity> accountDtoToAccountEntityConverter = new AbstractConverter<>() {
             @Override
             protected AccountEntity convert(AccountDto source) {
@@ -43,6 +51,7 @@ public class ApplicationConfiguration
                 return accountEntity;
             }
         };
+        // Create a custom converter to convert between the AccountEntity and the AccountDto
         final Converter<AccountEntity, AccountDto> accountEntityToAccountDtoConverter = new AbstractConverter<>() {
             @Override
             protected AccountDto convert(AccountEntity source) {
@@ -63,12 +72,16 @@ public class ApplicationConfiguration
                 return accountDto;
             }
         };
-
+        //Add the converters to the ModelMapper
         modelMapper.addConverter(accountDtoToAccountEntityConverter);
         modelMapper.addConverter(accountEntityToAccountDtoConverter);
         return modelMapper;
     }
 
+    /**
+     * Create a Jackson {@link ObjectMapper} that is used to convert an object to JSON or the other way around
+     * @return the {@link ObjectMapper}
+     */
     @Bean
     public ObjectMapper getObjectMapper() { return new ObjectMapper(); }
 }

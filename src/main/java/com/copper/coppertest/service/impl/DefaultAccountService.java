@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * The concrete implementation of the {@link AccountService}, that also includes the ability to cache the information
+ * using spring cache
+ */
 @CacheConfig(cacheNames = {"accounts"})
 @Slf4j
 @Service
