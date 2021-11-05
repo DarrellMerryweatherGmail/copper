@@ -1,6 +1,6 @@
 package com.copper.coppertest.web.controller;
 
-import com.copper.coppertest.model.AccountDto;
+import com.copper.coppertest.deribit.account.model.AccountDto;
 import com.copper.coppertest.service.AccountService;
 import com.sun.istack.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -18,13 +18,13 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
-@RequestMapping("/test/account")
-public class TestController
+@RequestMapping("/accounts")
+public class AccountController
 {
     private final AccountService accountService;
-    public static final String ACCOUNT_FORMAT = "/test/account/{id}";
+    public static final String ACCOUNT_FORMAT = "/accounts/{id}";
 
-    public TestController(final AccountService accountService)
+    public AccountController(final AccountService accountService)
     {
         this.accountService = accountService;
     }

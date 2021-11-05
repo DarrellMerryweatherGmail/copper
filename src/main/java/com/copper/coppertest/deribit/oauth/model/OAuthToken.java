@@ -1,4 +1,4 @@
-package com.copper.coppertest.deribit.model.oauth;
+package com.copper.coppertest.deribit.oauth.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -22,6 +22,11 @@ logging.level.com.copper.coppertest: DEBUG
 
 deribit:
   api-base-uri: https://test.deribit.com/api/v2
+  accounts:
+    subaccounts-path: private/get_subaccounts
+  wallet:
+    deposits-path: private/get_deposits
+    withdrawals-path: private/get_withdrawals
   oauth:
     auth-path: public/auth
     client-id: FO7pZ6s6

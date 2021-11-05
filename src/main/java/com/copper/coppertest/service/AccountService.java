@@ -1,6 +1,6 @@
 package com.copper.coppertest.service;
 
-import com.copper.coppertest.model.AccountDto;
+import com.copper.coppertest.deribit.account.model.AccountDto;
 
 public interface AccountService
 {

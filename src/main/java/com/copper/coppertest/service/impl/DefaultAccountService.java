@@ -1,6 +1,6 @@
 package com.copper.coppertest.service.impl;
 
-import com.copper.coppertest.model.AccountDto;
+import com.copper.coppertest.deribit.account.model.AccountDto;
 import com.copper.coppertest.persistence.entity.AccountEntity;
 import com.copper.coppertest.persistence.repository.AccountRepository;
 import com.copper.coppertest.service.AccountService;
@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +42,7 @@ public class DefaultAccountService implements AccountService
     @Override
     public AccountDto getAccount(final String accountId)
     {
-        log.debug("*****DEBUG - retrieving the account from the DB");
+        log.debug("Retrieving the account from the DB.");
         return Optional.ofNullable(accountId)
                 .flatMap(accountRepository::findById)
                 .map(account -> modelMapper.map(account, AccountDto.class))

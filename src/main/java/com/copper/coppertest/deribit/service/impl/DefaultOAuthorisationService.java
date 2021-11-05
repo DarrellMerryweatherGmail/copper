@@ -1,6 +1,6 @@
 package com.copper.coppertest.deribit.service.impl;
 
-import com.copper.coppertest.deribit.model.oauth.OAuthToken;
+import com.copper.coppertest.deribit.oauth.model.OAuthToken;
 import com.copper.coppertest.deribit.service.OAuthorisationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
