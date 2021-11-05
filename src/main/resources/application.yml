@@ -27,6 +27,7 @@ deribit:
   wallet:
     deposits-path: private/get_deposits
     withdrawals-path: private/get_withdrawals
+    submit-transfer-to-subaccount-path: private/submit_transfer_to_subaccount
   oauth:
     auth-path: public/auth
     client-id: FO7pZ6s6

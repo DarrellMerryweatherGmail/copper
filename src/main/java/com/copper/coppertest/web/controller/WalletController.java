@@ -3,6 +3,7 @@ package com.copper.coppertest.web.controller;
 import com.copper.coppertest.deribit.service.DeribitWalletService;
 import com.copper.coppertest.deribit.wallet.model.DepositDto;
 import com.copper.coppertest.deribit.wallet.model.TransferRequest;
+import com.copper.coppertest.deribit.wallet.model.TransferToSubaccountDto;
 import com.copper.coppertest.deribit.wallet.model.WithdrawalDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,11 +37,10 @@ public class WalletController
         return ResponseEntity.ok(deribitWalletService.getWithdrawals(currency));
     }
     @PostMapping("/transfers/{currency}")
-    public ResponseEntity<Void> transfer(
+    public ResponseEntity<TransferToSubaccountDto> transfer(
             @PathVariable final String currency,
             @RequestBody final TransferRequest transferRequest)
     {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(deribitWalletService.transfer(currency, transferRequest));
     }
-
 }
