@@ -3,6 +3,7 @@ package com.copper.coppertest.deribit.service.impl;
 import com.copper.coppertest.deribit.oauth.OAuthConnectionConfigurer;
 import com.copper.coppertest.deribit.oauth.model.OAuthToken;
 import com.copper.coppertest.deribit.service.DeribitAccountService;
+import com.copper.coppertest.deribit.service.DeribitErrorMessages;
 import com.copper.coppertest.deribit.service.OAuthorisationService;
 import com.copper.coppertest.deribit.account.model.AccountDto;
 import com.copper.coppertest.service.AccountService;
@@ -53,7 +54,7 @@ public class DefaultDeribitAccountService implements DeribitAccountService
         try {
             JSONRPC2Session session = new JSONRPC2Session(new URL(apiBaseUri));
             final Map<String, Object> parameters = new HashMap<>();
-            parameters.put("with_portfolio", true);
+            parameters.put(AccountParameters.WITH_PORTFOLIO.getParameterName(), true);
 
             session.setConnectionConfigurator(new OAuthConnectionConfigurer(oauthToken));
 
@@ -65,15 +66,28 @@ public class DefaultDeribitAccountService implements DeribitAccountService
                 final AccountDto[] accounts = objectMapper.convertValue(response.getResult(), AccountDto[].class);
                 this.saveAccounts(accounts);
             } else {
-                log.error("Connection to Deribit has failed, please check the logs");
+                log.error(DeribitErrorMessages.CONNECTION_FAILED_CHECK_LOGS);
             }
         } catch (MalformedURLException | JSONRPC2SessionException e) {
-            log.error("Connection to Deribit failed - {}", e.getLocalizedMessage());
+            log.error(DeribitErrorMessages.CONNECTION_FAILED_TEMPLATE, e.getLocalizedMessage());
             e.printStackTrace();
         }
     }
     private void saveAccounts(final AccountDto[] accounts)
     {
         Arrays.stream(accounts).forEach(accountService::saveAccount);
+    }
+    enum AccountParameters
+    {
+        WITH_PORTFOLIO("with_portfolio");
+
+        private final String parameterName;
+
+        AccountParameters(final String parameterName)
+        {
+            this.parameterName = parameterName;
+        }
+        public String getParameterName() { return this.parameterName; }
+
     }
 }

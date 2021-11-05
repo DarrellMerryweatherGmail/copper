@@ -1,6 +1,7 @@
 package com.copper.coppertest.deribit.service.impl;
 
 import com.copper.coppertest.deribit.oauth.model.OAuthToken;
+import com.copper.coppertest.deribit.service.DeribitErrorMessages;
 import com.copper.coppertest.deribit.service.OAuthorisationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
@@ -58,7 +59,7 @@ public class DefaultOAuthorisationService implements OAuthorisationService
             {
                 oauthToken = objectMapper.convertValue(response.getResult(), OAuthToken.class);
             } else {
-                log.debug("*****DEBUG - FAILURE");
+                log.error(DeribitErrorMessages.CONNECTION_FAILED_CHECK_LOGS);
             }
         } catch (MalformedURLException | JSONRPC2SessionException e) {
             e.printStackTrace();

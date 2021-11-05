@@ -2,6 +2,7 @@ package com.copper.coppertest.deribit.service.impl;
 
 import com.copper.coppertest.deribit.oauth.OAuthConnectionConfigurer;
 import com.copper.coppertest.deribit.oauth.model.OAuthToken;
+import com.copper.coppertest.deribit.service.DeribitErrorMessages;
 import com.copper.coppertest.deribit.service.DeribitWalletService;
 import com.copper.coppertest.deribit.service.OAuthorisationService;
 import com.copper.coppertest.deribit.wallet.model.DepositDto;
@@ -59,21 +60,19 @@ public class DefaultDeribitWalletService implements DeribitWalletService
     {
         try {
             final Map<String, Object> parameters = new HashMap<>();
-            parameters.put("currency", currency.toUpperCase());
+            parameters.put(WalletParameters.CURRENCY.getParameterName(), currency.toUpperCase());
 
             final JSONRPC2Response response = sendRequestToDeribit(depositsPath, parameters, 2);
 
             if (response.indicatesSuccess())
             {
-                log.debug("*****DEBUG - response - {}", response.getResult());
                 final DepositResponse depositResponse = objectMapper.convertValue(response.getResult(), DepositResponse.class);
-                log.debug("******DEBUG - depositResponse - {}", depositResponse);
                 return List.of(depositResponse.getData());
             } else {
-                log.error("Connection to Deribit has failed, please check the logs");
+                log.error(DeribitErrorMessages.CONNECTION_FAILED_CHECK_LOGS);
             }
         } catch (MalformedURLException | JSONRPC2SessionException e) {
-            log.error("Connection to Deribit failed - {}", e.getLocalizedMessage());
+            log.error(DeribitErrorMessages.CONNECTION_FAILED_TEMPLATE, e.getLocalizedMessage());
             e.printStackTrace();
         }
         return Collections.emptyList();
@@ -84,22 +83,20 @@ public class DefaultDeribitWalletService implements DeribitWalletService
     {
         try {
             final Map<String, Object> parameters = new HashMap<>();
-            parameters.put("currency", currency.toUpperCase());
+            parameters.put(WalletParameters.CURRENCY.getParameterName(), currency.toUpperCase());
 
             final JSONRPC2Response response = sendRequestToDeribit(withdrawalsPath, parameters, 2);
 
             if (response.indicatesSuccess())
             {
-                log.debug("*****DEBUG - response - {}", response.getResult());
                 final WithdrawalResponse
                         withdrawalResponse = objectMapper.convertValue(response.getResult(), WithdrawalResponse.class);
-                log.debug("******DEBUG - depositResponse - {}", withdrawalResponse);
                 return List.of(withdrawalResponse.getData());
             } else {
-                log.error("Connection to Deribit has failed, please check the logs");
+                log.error(DeribitErrorMessages.CONNECTION_FAILED_CHECK_LOGS);
             }
         } catch (MalformedURLException | JSONRPC2SessionException e) {
-            log.error("Connection to Deribit failed - {}", e.getLocalizedMessage());
+            log.error(DeribitErrorMessages.CONNECTION_FAILED_TEMPLATE, e.getLocalizedMessage());
             e.printStackTrace();
         }
         return Collections.emptyList();
@@ -108,22 +105,21 @@ public class DefaultDeribitWalletService implements DeribitWalletService
     public TransferToSubaccountDto transfer(final String currency, final TransferRequest transferRequest)
     {
         final Map<String, Object> parameters = new HashMap<>();
-        parameters.put("currency", currency.toUpperCase());
-        parameters.put("destination", transferRequest.getDestination());
-        parameters.put("amount", transferRequest.getAmount());
+        parameters.put(WalletParameters.CURRENCY.getParameterName(), currency.toUpperCase());
+        parameters.put(WalletParameters.DESTINATION.getParameterName(), transferRequest.getDestination());
+        parameters.put(WalletParameters.AMOUNT.getParameterName(), transferRequest.getAmount());
 
         try {
             final JSONRPC2Response response = sendRequestToDeribit(submitTransferToSubaccountPath, parameters, 3);
 
             if (response.indicatesSuccess())
             {
-                log.debug("*****DEBUG - response - {}", response.getResult());
                 return objectMapper.convertValue(response.getResult(), TransferToSubaccountDto.class);
             } else {
-                log.error("Connection to Deribit has failed, please check the logs");
+                log.error(DeribitErrorMessages.CONNECTION_FAILED_CHECK_LOGS);
             }
         } catch (MalformedURLException | JSONRPC2SessionException e) {
-            log.error("Connection to Deribit failed - {}", e.getLocalizedMessage());
+            log.error(DeribitErrorMessages.CONNECTION_FAILED_TEMPLATE, e.getLocalizedMessage());
             e.printStackTrace();
         }
         return null;
@@ -140,5 +136,20 @@ public class DefaultDeribitWalletService implements DeribitWalletService
     private OAuthToken getOAuthToken()
     {
         return oAuthorisationService.getAccessToken();
+    }
+
+    enum WalletParameters
+    {
+        CURRENCY("currency"),
+        DESTINATION("destination"),
+        AMOUNT("amount");
+
+        private final String parameterName;
+
+        WalletParameters(final String parameterName)
+        {
+            this.parameterName = parameterName;
+        }
+        public String getParameterName() { return this.parameterName; }
     }
 }
