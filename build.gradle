@@ -5,12 +5,17 @@ plugins {
 }
 
 group = 'com.copper'
-version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 ext {
     modelMapperVersion = "2.4.4"
     caffeineVersion = "3.0.4"
     jsonrpcClientVersion = "1.16.5"
+    openApiUIVersion = "1.5.12"
+    runtimeJavadocScribeVersion = "0.12.0"
+}
+
+springBoot {
+    buildInfo()
 }
 
 configurations {
@@ -27,13 +32,15 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.flywaydb:flyway-core")
     implementation("org.apache.tomcat:tomcat-jdbc")
 
     implementation("org.modelmapper:modelmapper:${modelMapperVersion}")
     implementation("com.github.ben-manes.caffeine:caffeine:${caffeineVersion}")
     implementation("com.thetransactioncompany:jsonrpc2-client:${jsonrpcClientVersion}")
-
+    implementation("org.springdoc:springdoc-openapi-ui:${openApiUIVersion}")
+    implementation("org.springdoc:springdoc-openapi-javadoc:${openApiUIVersion}")
 
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")

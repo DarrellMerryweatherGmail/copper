@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
  * A {@link RestController} that is used to sync the accounts tied to the client-id and client-secret to the persistence
  */
 @RestController
-@RequestMapping("/deribit")
 public class DeribitController
 {
     private final DeribitAccountService deribitService;
@@ -31,7 +30,7 @@ public class DeribitController
      * @return no body is returned, but a status of ACCEPTED (202) is returned
      */
     @GetMapping
-    @RequestMapping("/sync-accounts")
+    @RequestMapping("/deribit/sync-accounts")
     public ResponseEntity<Void> getSubaccount()
     {
         deribitService.syncAccounts();

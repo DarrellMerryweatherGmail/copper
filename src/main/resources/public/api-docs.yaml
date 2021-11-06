@@ -1,0 +1,340 @@
+# Copper Developers Test v1 API
+openapi: '3.0.0'
+info:
+  title: Copper Developers Test
+  description: |
+    These API's are the implementation of the development test for copper.co. They allow for the sycnronisation of a user (defined by the client-id/client-secret) to be stored in a local persistence layer. It also allows for the retrieval of both deposits and withdrawals (however it wasn't possible to implement withdrawals, as the external bitcoin address won't clear in time). It also has API's that allow for transfer between the main account and the sub-account
+  version: "0.0.1-SNAPSHOT"
+  contact:
+    name: "Darrell Merryweather"
+    email: "darrell.merryweather@hotmail.com"
+
+security:
+  - BasicAuth: []
+  - BearerAuth: []
+
+paths:
+  /accounts:
+    get:
+      tags:
+        - Accounts
+      description: |
+        Returns a list of all of the sycnronised accounts that have been persisted to the persistence layer
+      operationId: getAllAccounts
+      responses:
+        '200':
+          description: A list of all persisted accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+    post:
+      tags:
+        - Accounts
+      description: |
+        Creates a new account in the local persistence store, this doesn't affect any account(s) in Deribit, and is merely a way of testing functionality
+      operationId: createAccount
+      requestBody:
+        description: The contents will be an Account
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        '201':
+          description: The request has been fulfilled and resulted in a new Account being created.
+
+  /accounts/{id}:
+    parameters:
+      - name: id
+        required: true
+        in: path
+        description: The ID of the Account
+        schema:
+          type: string
+        example: 1234
+    get:
+      tags:
+        - Accounts
+      description: |
+        Retrieves the specified Account including a list of its portfolios.
+      responses:
+        '200':
+          description: The Account that was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '404':
+          description: The Account doesn't exist
+    delete:
+      tags:
+        - Accounts
+      description: |
+        Deletes a specific Account.
+      responses:
+        '204':
+          description: Template has been deleted.
+
+  /deribit/sync-accounts:
+    description: |
+      The Account(s) that are associated with the defined client-id/client-secret are synchronised from Deribit and stored in the local persistence
+    get:
+      tags:
+        - Deribit
+      description: |
+        Merely requests that the account be synchronised to the local persistence
+      responses:
+        '202':
+          description: The request for synchronising the account(s) has been accepted and will be processed
+
+  /wallet/deposits/{currency}:
+    get:
+      parameters:
+        - name: currency
+          required: true
+          in: path
+          description: The currency for any deposits
+          schema:
+            type: string
+          example: BTC
+      tags:
+        - Wallet
+      description: |
+        Retrieve any deposits that have been made for the account associated with the client-id/client-secret
+      responses:
+        '200':
+          description: |
+            A request to retrieve the deposits was successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deposits'
+
+  /wallet/withdrawals/{currency}:
+    get:
+      parameters:
+        - name: currency
+          required: true
+          in: path
+          description: The currency for any withdrawals
+          schema:
+            type: string
+          example: BTC
+      tags:
+        - Wallet
+      description: |
+        Retrieve any withdrawals that have been made for the account associated with the client-id/client-secret
+      responses:
+        '200':
+          description: |
+            A request to retrieve the withdrawals was successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Withdrawals'
+
+  /wallet/transfers/{currency}:
+    post:
+      parameters:
+        - name: currency
+          required: true
+          in: path
+          description: The currency for the transfer
+          schema:
+            type: string
+          example: BTC
+      tags:
+        - Wallet
+      description: |
+        Perform a transfer from the main account to a sub-account of the specified amount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferRequest'
+      responses:
+        '201':
+          description: |
+            The response from making a transfer request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransferResponse'
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    BearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    Account:
+      required:
+        - id
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        portfolios:
+          $ref: '#/components/schemas/Portfolios'
+      example:
+        code: 12345
+        type: main
+        username: some-username
+        email: some-email@some-domain.com
+        portfolios:
+          btc:
+            currency: "BTC"
+            balance: 8.0
+            available_withdrawal_funds: 8.0
+            available_funds: 8.0
+
+    Deposits:
+      type: object
+      properties:
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/Deposit'
+
+    Deposit:
+      properties:
+        updated_timestamp:
+          type: integer
+        transaction_id:
+          type: string
+        state:
+          type: string
+        received_timestamp:
+          type: integer
+        currency:
+          type: string
+        amount:
+          type: number
+        address:
+          type: string
+        note:
+          type: string
+      example:
+        updated_timestamp: 1635974220307
+        transaction_id: "064f43f44a03817b389a2ffbb1229c24bca879a13c7ad0974755da34357ad160"
+        state: "completed"
+        received_timestamp: 1635974210622
+        currency: "BTC"
+        amount: 10.0
+        address: "2N88gATja33ZDpAxibVTLxYEbhqsJ7Bxifk"
+        note: "This was a transfer"
+
+    Withdrawals:
+      type: object
+      properties:
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/Withdrawal'
+
+    Withdrawal:
+      properties:
+        address:
+          type: string
+        amount:
+          type: number
+        confirmed_timestamp:
+          type: integer
+        created_timestamp:
+          type: integer
+        currency:
+          type: string
+        fee:
+          type: number
+        id:
+          type: integer
+        priority:
+          type: number
+        state:
+          type: string
+        transaction_id:
+          type: string
+        updated_timestamp:
+          type: integer
+      example:
+        address: "2NBqqD5GRJ8wHy1PYyCXTe9ke5226FhavBz"
+        amount: 0.5
+        confirmed_timestamp: 1635974220307
+        created_timestamp: 1635974220307
+        currency: "BTC"
+        fee: 0.0001
+        id: 1
+        priority: 0.15
+        state: "unconfirmed"
+        transaction_id: "12345"
+        updated_timestamp: 1635974220307
+
+    TransferRequest:
+      properties:
+        destination:
+          type: string
+        amount:
+          type: number
+
+    TransferResponse:
+      properties:
+        updated_timestamp:
+          type: integer
+        type:
+          type: string
+        state:
+          type: string
+        other_side:
+          type: string
+        id:
+          type: integer
+        direction:
+          type: string
+        currency:
+          type: string
+        created_timestamp:
+          type: integer
+        amount:
+          type: number
+      example:
+        updated_timestamp: 1550226218504
+        type: "subaccount"
+        state: "confirmed"
+        other_side: "MySubAccount"
+        id: 1
+        direction: "payment"
+        currency: "BTC"
+        created_timestamp: 1550226218504
+        amount: 12.1234
+
+    Portfolios:
+      additionalProperties:
+        $ref: '#/components/schemas/Portfolio'
+
+    Portfolio:
+      properties:
+        currency:
+          type: string
+        balance:
+          type: number
+        available_withdrawal_funds:
+          type: number
+        available_funds:
+          type: number
+      example:
+        currency: "btc"
+        balance: 8.0
+        available_withdrawal_funds: 8.0
+        available_funds: 8.0
+

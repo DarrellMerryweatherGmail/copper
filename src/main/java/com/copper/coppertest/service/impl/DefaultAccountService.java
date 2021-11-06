@@ -36,7 +36,7 @@ public class DefaultAccountService implements AccountService
     }
 
     @Override
-    @Cacheable(unless="#result == null")
+    @Cacheable(unless="#result == null or #result.size()==0")
     public List<AccountDto> getAllAccounts()
     {
         log.debug("Retrieving the accounts from the DB.");

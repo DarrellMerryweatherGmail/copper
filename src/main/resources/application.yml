@@ -35,3 +35,10 @@ deribit:
     auth-path: public/auth
     client-id: FO7pZ6s6
     client-secret: dVVFUjZN4kuXVW1b1Pd_pIBoe5pgMoBpmAWNph8FMKs
+springdoc:
+  api-docs.groups.enabled: true
+  swagger-ui:
+    url: /api-docs.yaml
+    display-request-duration: true
+    groups-order: DESC
+    use-root-path: true
