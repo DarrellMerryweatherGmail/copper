@@ -30,21 +30,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Account'
-    post:
-      tags:
-        - Accounts
-      description: |
-        Creates a new account in the local persistence store, this doesn't affect any account(s) in Deribit, and is merely a way of testing functionality
-      operationId: createAccount
-      requestBody:
-        description: The contents will be an Account
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Account'
-      responses:
-        '201':
-          description: The request has been fulfilled and resulted in a new Account being created.
 
   /accounts/{id}:
     parameters:

@@ -38,21 +38,6 @@ public class AccountController
         this.accountService = accountService;
     }
 
-    /**
-     * Create an {@link AccountDto} in the persistence layer
-     * @param accountDto the {@link AccountDto} to create
-     * @param builder a Spring {@link UriComponentsBuilder} that is used for generating the Location header for the response
-     * @return a blank {@link ResponseEntity} being returned, as the body will be empty, but the Location header will
-     * be set for the created resource, and a response status of CREATED (201)
-     */
-    @PostMapping
-    public ResponseEntity<Void> createAccount(@RequestBody @NotNull AccountDto accountDto, final UriComponentsBuilder builder)
-    {
-        accountService.saveAccount(accountDto);
-        final var uri = builder.path(ACCOUNT_FORMAT).buildAndExpand(accountDto.getId()).toUri();
-        return ResponseEntity.created(uri).build();
-    }
-
     @GetMapping
     public ResponseEntity<List<AccountDto>> getAllAccounts()
     {
