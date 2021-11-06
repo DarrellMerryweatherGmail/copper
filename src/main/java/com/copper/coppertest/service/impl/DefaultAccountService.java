@@ -11,7 +11,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * The concrete implementation of the {@link AccountService}, that also includes the ability to cache the information
@@ -31,6 +33,17 @@ public class DefaultAccountService implements AccountService
     {
         this.accountRepository = accountRepository;
         this.modelMapper = modelMapper;
+    }
+
+    @Override
+    @Cacheable(unless="#result == null")
+    public List<AccountDto> getAllAccounts()
+    {
+        log.debug("Retrieving the accounts from the DB.");
+        return accountRepository.findAll()
+                .stream()
+                .map(accountEntity -> modelMapper.map(accountEntity, AccountDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override

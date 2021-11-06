@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -50,6 +51,12 @@ public class AccountController
         accountService.saveAccount(accountDto);
         final var uri = builder.path(ACCOUNT_FORMAT).buildAndExpand(accountDto.getId()).toUri();
         return ResponseEntity.created(uri).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AccountDto>> getAllAccounts()
+    {
+        return ResponseEntity.ok(accountService.getAllAccounts());
     }
 
     /**

@@ -2,12 +2,19 @@ package com.copper.coppertest.service;
 
 import com.copper.coppertest.deribit.account.model.AccountDto;
 
+import java.util.List;
+
 /**
  * The service that is used to perform operations on the {@link AccountDto}'s, including persisting, retrieving and
  * deleting
  */
 public interface AccountService
 {
+    /**
+     * Get all of the current accounts from the persistence
+     * @return a {@link List} of {@link AccountDto}'s
+     */
+    List<AccountDto> getAllAccounts();
     /**
      * Save an {@link AccountDto} to the persistence
      * @param account the {@link AccountDto} to save
